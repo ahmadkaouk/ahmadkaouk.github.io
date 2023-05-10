@@ -1,5 +1,3 @@
-
-
 html {
     height: 100%;
 }
@@ -7,25 +5,64 @@ html {
 body {
     font-family: serif;
     line-height: 1.6;
+    font-size: 1rem;
     color: #333;
-    margin: 0;
-    padding: 0;
-    max-width: 70%;
-    margin-left: auto;
-    margin-right: auto;
     min-height: 100%;
     display: flex;
     flex-direction: column;
 }
 
+/* For desktops and laptops */
+@media (min-width: 1025px) {
+    body {
+        margin: 0 auto;
+        /* This centers the content horizontally by automatically setting equal left and right margins */
+        max-width: 45%;
+        /* This restricts the content to 80% of the viewport width */
+    }
+}
+
+/* For tablets */
+@media (min-width: 768px) and (max-width: 1024px) {
+    body {
+        margin: 0 auto;
+        max-width: 80%;
+        /* This restricts the content to 90% of the viewport width */
+    }
+}
+
+/* For mobile phones */
+@media (max-width: 767px) {
+    body {
+        margin: 0 auto;
+        max-width: 85%;
+        /* This restricts the content to 95% of the viewport width */
+    }
+}
+
 header {
     padding-top: 1rem;
+}
+
+h2 {
     font-style: italic;
+    font-weight: 200;
+}
+
+.name {
+    font-size: 3rem;
+    font-weight: 100;
 }
 
 a:link,
 a:visited {
-    color: blue;
+    color: #333;
+    text-decoration: none;
+    border-bottom: 1px solid #000;
+}
+
+a:hover {
+    border-bottom: 1px dashed #000;
 }
 
 li {
@@ -40,6 +77,10 @@ footer {
 }
 
 .contact {
-    font-weight: bold;
     font-style: italic;
+    margin: 0rem;
+}
+
+ul {
+    margin: 0;
 }
