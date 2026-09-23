@@ -1,12 +1,12 @@
 @font-face {
     font-family: "Inter";
-    src: url("/assets/fonts/inter-variable.woff2") format("woff2");
+    src: url("./assets/fonts/inter-variable.woff2") format("woff2");
     font-weight: 100 900;
     font-style: normal;
     font-display: swap;
 }
 :root {
-    --page: #fafafa;
+    --page: #fff;
     --text: #252525;
     --heading: #000;
     --section-heading: #999;

@@ -6,7 +6,7 @@
 
     function applyTheme(value) {
         root.dataset.theme = value;
-        document.querySelector('meta[name="theme-color"]').content = value === 'dark' ? '#111111' : '#fafafa';
+        document.querySelector('meta[name="theme-color"]').content = value === 'dark' ? '#111111' : '#ffffff';
         const button = document.getElementById('theme-toggle');
         if (button) {
             button.setAttribute('aria-label', value === 'dark' ? 'Use light theme' : 'Use dark theme');
