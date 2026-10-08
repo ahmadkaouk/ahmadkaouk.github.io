@@ -1,14 +1,14 @@
 @font-face {
-    font-family: "Inter";
-    src: url("./assets/fonts/inter-variable.woff2") format("woff2");
-    font-weight: 100 900;
+    font-family: "Instrument Sans";
+    src: url("./assets/fonts/instrument-sans-variable.woff2") format("woff2");
+    font-weight: 400 700;
     font-style: normal;
     font-display: swap;
 }
 :root {
     --page: #fff;
-    --text: #252525;
-    --heading: #000;
+    --text: #302b28;
+    --heading: #241f1c;
     --section-heading: #999;
     --muted: #777;
     --line: #eaeaea;
@@ -30,10 +30,11 @@ html { background: var(--page); }
 body {
     margin: 0;
     color: var(--text);
-    font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: "Instrument Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
     font-size: 14px;
-    font-weight: 450;
-    line-height: 20px;
+    font-weight: 480;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.7;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -50,12 +51,12 @@ a {
 }
 a:hover, a:focus-visible { text-decoration-color: currentColor; }
 a:focus-visible, button:focus-visible { outline: 2px solid currentColor; outline-offset: 5px; border-radius: 2px; }
-.content { width: min(540px, calc(100% - 48px)); margin: 0 auto; padding: 112px 0 80px; }
-.identity { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+.content { width: min(520px, calc(100% - 48px)); margin: 0 auto; padding: 112px 0 80px; }
+.identity { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
 .avatar { display: block; width: 36px; height: 36px; border-radius: 5px; object-fit: cover; }
 .role { color: var(--muted); }
-.intro-copy { display: grid; gap: 12px; }
-.link-section { margin-top: 32px; }
+.intro-copy { display: grid; gap: 10px; }
+.link-section { margin-top: 28px; }
 h2 {
     margin-bottom: 10px;
     padding-bottom: 8px;
