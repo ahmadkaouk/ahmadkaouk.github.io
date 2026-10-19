@@ -1,4 +1,4 @@
-// Canvas simulations for the Selected work pieces, the work row's arrows and the nav's section highlight.
+// Canvas simulations for the Selected work pieces, the work row's arrows, visitor stats and the nav's section highlight.
 (() => {
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const styles = getComputedStyle(document.documentElement);
@@ -914,6 +914,20 @@
         addEventListener("resize", sync);
         sync();
     }
+
+    // Visitor stats (Umami): which work pieces come into view, and which outside links are followed. The CV, GitHub,
+    // LinkedIn and email links are named in the HTML with data-umami-event. Off the live domain, umami.track does nothing.
+    const track = (name, data) => window.umami?.track(name, data);
+    const seen = new IntersectionObserver((entries) => entries.forEach((e) => {
+        if (e.intersectionRatio < 0.5) return;
+        track("work-view", { piece: e.target.id });
+        seen.unobserve(e.target);
+    }), { threshold: 0.5 });
+    document.querySelectorAll(".piece").forEach((p) => seen.observe(p));
+    document.addEventListener("click", (e) => {
+        const a = e.target.closest("a[href]");
+        if (a && a.host !== location.host && !a.dataset.umamiEvent) track("link", { url: a.href });
+    });
 
     // Highlight the nav link for the section currently in view. Only in-page links take part;
     // a link to another page (like Work) keeps whatever aria-current the page gives it.
