@@ -6,25 +6,8 @@
     src: url("/assets/fonts/golos-text-variable.woff2") format("woff2");
 }
 
-@font-face {
-    font-family: "Newsreader";
-    font-style: normal;
-    font-weight: 400 600;
-    font-display: swap;
-    src: url("/assets/fonts/newsreader-variable.woff2") format("woff2");
-}
-
-@font-face {
-    font-family: "Newsreader";
-    font-style: italic;
-    font-weight: 400 600;
-    font-display: swap;
-    src: url("/assets/fonts/newsreader-italic-variable.woff2") format("woff2");
-}
-
 :root {
     --sans: "Golos Text", ui-sans-serif, system-ui, sans-serif;
-    --serif: "Newsreader", ui-serif, Georgia, serif;
     --bg: #fdfcfa;
     --ink: #1f1c18;
     --text: #2b2723;
@@ -43,7 +26,9 @@
 h1, h2, h3, p, ul, figure { margin: 0; padding: 0; font-size: inherit; font-weight: inherit; }
 ul { list-style: none; }
 
-html { background: var(--bg); scroll-behavior: smooth; }
+/* The work row bleeds out to the window's edge with 100vw, which counts a visible scrollbar: clip the overshoot so the
+   page itself never scrolls sideways */
+html { background: var(--bg); scroll-behavior: smooth; overflow-x: clip; }
 section[id], article[id] { scroll-margin-top: 64px; }
 body {
     margin: 0;
@@ -113,10 +98,9 @@ a:hover { color: var(--ink); text-decoration-color: var(--accent); }
 .lead a { text-decoration-color: var(--accent); text-decoration-thickness: 2px; }
 .lead a:hover { color: var(--accent); }
 
-/* Text: reading paragraphs are set in the serif, everything else stays in the sans */
+/* Text: reading paragraphs in the ink color, at the body size */
 .lead p, .piece-text p, .now p:not(.facts) {
-    font-family: var(--serif);
-    font-size: 16px;
+    font-size: 14px;
     line-height: 1.6;
     color: var(--ink);
 }
@@ -206,7 +190,3 @@ h2 { margin: 72px 0 14px; color: var(--ink); font-size: inherit; font-weight: 50
     html { scroll-behavior: auto; }
     a { transition: none; }
 }
-
-/* Experiment: Golos only. Delete this block to bring Newsreader back */
-:root { --serif: var(--sans); }
-.lead p, .piece-text p, .now p:not(.facts) { font-size: 14px; }

@@ -3,22 +3,9 @@
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const styles = getComputedStyle(document.documentElement);
     const C = Object.fromEntries(["ink", "dim", "mid", "line", "leader", "accent", "card"].map((k) => [k, styles.getPropertyValue(`--${k}`).trim()]));
-    const FONT = '11.5px "Golos Text", ui-sans-serif, system-ui, sans-serif';
-    const BIG = '500 19.5px "Golos Text", ui-sans-serif, system-ui, sans-serif';
     const TAU = Math.PI * 2;
 
     const rng = (seed) => () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
-    const gauss = (rand) => Math.sqrt(-2 * Math.log(1 - rand())) * Math.cos(TAU * rand());
-
-    // Scatter n points in [x0,x1]×[y0,y1] (normalized), at least `gap` apart once x is scaled by `aspect`.
-    function scatter(rand, n, [x0, x1, y0, y1], gap, aspect, first = []) {
-        const pts = [...first];
-        for (let tries = 0; pts.length < n && tries < 20000; tries++) {
-            const p = { nx: x0 + rand() * (x1 - x0), ny: y0 + rand() * (y1 - y0) };
-            if (pts.every((q) => Math.hypot((p.nx - q.nx) * aspect, p.ny - q.ny) > gap)) pts.push(p);
-        }
-        return pts;
-    }
 
     function dot(ctx, x, y, r) {
         ctx.beginPath();
@@ -30,16 +17,6 @@
         ctx.moveTo(x0, y0);
         ctx.lineTo(x1, y1);
         ctx.stroke();
-    }
-
-    function label(ctx, x, y, strong, rest = "") {
-        ctx.font = FONT;
-        ctx.textAlign = "left";
-        ctx.textBaseline = "alphabetic";
-        ctx.fillStyle = C.ink;
-        ctx.fillText(strong, x, y);
-        ctx.fillStyle = C.dim;
-        ctx.fillText(rest, x + ctx.measureText(strong).width, y);
     }
 
     // A lost frame, the same on every card: a short dashed stub ending in an ×.
@@ -54,21 +31,6 @@
         line(ctx, x - 3, y1 - 3, x + 3, y1 + 3);
         line(ctx, x - 3, y1 + 3, x + 3, y1 - 3);
         ctx.restore();
-    }
-
-    // The figures across the top of a card: a small label over a large value, in one or two columns.
-    function header(ctx, w, h, pairs) {
-        const cols = [24, w / 2 + 8];
-        ctx.textAlign = "left";
-        ctx.textBaseline = "alphabetic";
-        pairs.forEach(([name, value], i) => {
-            ctx.font = FONT;
-            ctx.fillStyle = C.dim;
-            ctx.fillText(name, cols[i], Math.round(h * 0.13));
-            ctx.font = BIG;
-            ctx.fillStyle = C.ink;
-            ctx.fillText(value, cols[i], Math.round(h * 0.21));
-        });
     }
 
     // Sizes a canvas to its box at device resolution and animates it while on screen.
@@ -137,110 +99,6 @@
             });
         }
     }
-
-    // Smart meters forwarding readings hop by hop to a collector (RPL-style tree).
-    function mesh(caption) {
-        const rand = rng(11);
-        const pts = scatter(rand, 26, [0.05, 0.95, 0.08, 0.92], 0.12, 1.6, [{ nx: 0.5, ny: 0.5 }]);
-        let w = 0, h = 0, nodes = [], packets = [], pulses = [], wait = 0.2;
-
-        function build() {
-            const range = h * 0.27;
-            for (const n of nodes) { n.rank = Infinity; n.parent = null; }
-            nodes[0].rank = 0;
-            const queue = [nodes[0]];
-            while (queue.length) {
-                const a = queue.shift();
-                for (const b of nodes) {
-                    if (b.rank === Infinity && Math.hypot(a.x - b.x, a.y - b.y) < range) {
-                        b.rank = a.rank + 1;
-                        b.parent = a;
-                        queue.push(b);
-                    }
-                }
-            }
-            if (caption) caption.textContent = `${nodes.length - 1} meters, 1 collector`;
-        }
-        const send = (n) => n.parent && packets.push({ from: n, to: n.parent, t: 0 });
-
-        return {
-            resize(W, H) {
-                w = W;
-                h = H;
-                nodes = pts.map((p) => ({ x: p.nx * w, y: p.ny * h }));
-                packets = [];
-                build();
-            },
-            update(dt) {
-                wait -= dt;
-                if (wait <= 0) {
-                    wait = 0.35 + rand() * 0.5;
-                    send(nodes[1 + Math.floor(rand() * (nodes.length - 1))]);
-                }
-                for (const p of packets) {
-                    p.t += (100 * dt) / (Math.hypot(p.to.x - p.from.x, p.to.y - p.from.y) || 1);
-                    if (p.t < 1) continue;
-                    if (p.to === nodes[0]) {
-                        p.done = true;
-                        pulses.push({ r: 6, a: 1 });
-                    } else if (p.to.parent) {
-                        p.from = p.to;
-                        p.to = p.to.parent;
-                        p.t = 0;
-                    } else {
-                        p.done = true;
-                    }
-                }
-                packets = packets.filter((p) => !p.done);
-                for (const s of pulses) { s.r += 32 * dt; s.a -= 1.2 * dt; }
-                pulses = pulses.filter((s) => s.a > 0);
-            },
-            draw(ctx) {
-                ctx.lineWidth = 1;
-                ctx.strokeStyle = C.line;
-                ctx.beginPath();
-                for (const n of nodes) if (n.parent) { ctx.moveTo(n.x, n.y); ctx.lineTo(n.parent.x, n.parent.y); }
-                ctx.stroke();
-
-                ctx.strokeStyle = C.accent;
-                ctx.globalAlpha = 0.45;
-                ctx.beginPath();
-                for (const p of packets) { ctx.moveTo(p.from.x, p.from.y); ctx.lineTo(p.to.x, p.to.y); }
-                ctx.stroke();
-
-                for (const s of pulses) {
-                    ctx.globalAlpha = s.a;
-                    dot(ctx, nodes[0].x, nodes[0].y, s.r);
-                    ctx.stroke();
-                }
-                ctx.globalAlpha = 1;
-
-                ctx.fillStyle = C.dim;
-                ctx.strokeStyle = C.dim;
-                for (const n of nodes.slice(1)) {
-                    dot(ctx, n.x, n.y, 2.6);
-                    n.parent ? ctx.fill() : ctx.stroke();
-                }
-                ctx.fillStyle = C.ink;
-                dot(ctx, nodes[0].x, nodes[0].y, 6);
-                ctx.fill();
-
-                ctx.fillStyle = C.accent;
-                for (const p of packets) {
-                    dot(ctx, p.from.x + (p.to.x - p.from.x) * p.t, p.from.y + (p.to.y - p.from.y) * p.t, 3);
-                    ctx.fill();
-                }
-            },
-            press(x, y) {
-                if (nodes.length >= 80) return;
-                pts.push({ nx: x / w, ny: y / h });
-                nodes.push({ x, y });
-                build();
-                send(nodes[nodes.length - 1]);
-            },
-        };
-    }
-
 
     // What does a program use, and what does it pay? Moonbeam's EVM bills each transaction for computation (gas),
     // proof size and, since MBIP-5, the new storage it adds, which every node keeps forever. The storage meter
@@ -1031,7 +889,6 @@
         };
     }
 
-    mount(document.getElementById("mesh"), mesh(document.getElementById("mesh-caption")));
     mount(document.getElementById("storage"), storageMeter());
     mount(document.getElementById("battery"), battery());
     mount(document.getElementById("linkq"), linkQuality());
