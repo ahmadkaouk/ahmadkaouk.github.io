@@ -1,54 +1,98 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="light">
-
+<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="theme-color" content="#ffffff">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="description" content="Ahmad Kaouk, software engineer interested in systems programming, performance optimization, distributed systems, AI, and machine learning.">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ahmad Kaouk</title>
+    <meta name="description" content="Software engineer in Paris building distributed systems and low-level software, mostly in Rust and C++.">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#fdfcfa">
     <link rel="canonical" href="https://ahmadkaouk.com/">
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="Ahmad Kaouk">
-    <meta property="og:description" content="Software engineer interested in systems programming, performance optimization, distributed systems, AI, and machine learning.">
+    <meta property="og:description" content="Software engineer in Paris building distributed systems and low-level software.">
     <meta property="og:url" content="https://ahmadkaouk.com/">
-
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Ahmad Kaouk">
-    <meta name="twitter:description" content="Software engineer interested in systems programming, performance optimization, distributed systems, AI, and machine learning.">
-    <title>Ahmad Kaouk</title>
-    <link rel="stylesheet" href="./styles.css?v=instrument-sans-6">
-    <script src="./theme.js?v=juliette-layout-2"></script>
-</head>
 
+    <link rel="icon" href="/assets/avatar.jpg" type="image/jpeg">
+    <link rel="apple-touch-icon" href="/assets/avatar.jpg">
+    <link rel="preload" href="/assets/fonts/golos-text-variable.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/fonts/newsreader-variable.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="style.css">
+    <script src="viz.js" defer></script>
+</head>
 <body>
-    <a class="skip-link" href="#main-content">Skip to content</a>
-    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Use dark theme" title="Toggle theme" aria-pressed="false">
-        <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor"/><path d="M8 2.5a5.5 5.5 0 0 0 0 11Z" fill="currentColor"/></svg>
-    </button>
-    <main class="content" id="main-content">
-        <header class="intro">
-            <div class="identity">
-                <img class="avatar" src="./assets/avatar.jpg" alt="" width="36" height="36">
-                <div>
-                    <h1>Ahmad Kaouk</h1>
-                    <p class="role">Software engineer</p>
+    <header class="top">
+        <div class="top-inner">
+            <nav class="nav" aria-label="Sections">
+                <a href="./" aria-current="page">About</a>
+                <a href="work.html">Work</a>
+                <a href="writings.html">Writings</a>
+                <a href="/assets/ahmad-kaouk-cv.pdf">CV</a>
+                <a href="now.html">Now</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page">
+        <h1 class="sr-only">Ahmad Kaouk</h1>
+        <section class="intro" id="about" aria-label="About">
+            <div class="lead">
+                <p>I'm Ahmad, a <span class="ink">software engineer</span> in Paris. For the past ten years I've built systems that have to keep working under tight limits: a battery that must last 20 years, a radio that can only listen in short bursts, a block that must finish within a fixed time.</p>
+                <p>What I enjoy most is <span class="ink">the layer underneath</span>: how machines share work, how code meets hardware, and the infrastructure today's biggest workloads run on.</p>
+                <p>Find me on <a href="https://github.com/ahmadkaouk">GitHub</a> and <a href="https://www.linkedin.com/in/ahmad-kaouk/">LinkedIn</a>, <a href="mailto:ahmadkaouk.93@gmail.com">email me</a>, or read my <a href="/assets/ahmad-kaouk-cv.pdf">CV</a>.</p>
+            </div>
+        </section>
+
+        <section id="work" aria-labelledby="work-title">
+            <h2 id="work-title">Selected work</h2>
+            <div class="pieces" tabindex="0" aria-label="Selected work, scrolls sideways">
+
+            <article class="piece wide" id="work-linkq">
+                <canvas id="linkq" role="img" aria-label="Which neighbor should the meter send through? The meter has links to neighbors A and B, each carrying packets at 600 kbps and 200 kbps; lost packets are marked and sent again. Most of A's packets go at 200 kbps and get through first time; B's are split between the two speeds. A bar chart of each neighbor's score, shorter is better: the usual way, tries per packet at one speed (600 kbps), gives A 2.5 and B 2.0, so it picks B. The patented way weights each speed's tries by its share of the tries: A scores 20% times 2.5 plus 80% times 1.0, which is 1.3, and B 1.9, so it picks A."></canvas>
+                <div class="piece-text">
+                    <div class="line"><h3 class="name">Judging neighbors by the speeds they use</h3><span class="meta">Itron · <a href="https://patents.google.com/patent/US11133887B2/en">US patent 11,133,887</a> · 2021</span></div>
+                    <p>Smart meters relay each other's readings, and a meter can send to a neighbor at several speeds (modulation schemes), such as 600 or 200 kbps. If routing judges a neighbor at one speed while its traffic mostly uses another, it can pick the worse neighbor. At Itron, three co-inventors and I designed one score per neighbor: its tries per packet at each speed, weighted by each speed's share of the tries.</p>
                 </div>
+            </article>
+
+            <article class="piece wide" id="work-storage">
+                <canvas id="storage" role="img" aria-label="A virtual machine bills each program for what it uses. What does this one use? It is metered as it runs, identically on every node: gas for each instruction, bytes for each new slot or contract. The instructions, with compute in gas and storage in bytes: begin the transaction, 21,000 gas; SSTORE A, 1 writes a new slot, 22,100 gas and 116 bytes; SSTORE A, 2 writes A again, 100 gas and no new bytes, already counted; SSTORE B, 9 writes B, which existed, 5,000 gas and no new bytes; SSTORE A, 3, 100 gas; CREATE with 300 bytes of code, 92,000 gas and 412 bytes with its metadata. Two meters share one budget, the 220,000 gas paid: compute used 140,300 of 220,000 gas, 64% of its limit; storage used 528 of 601 bytes, 88% of its limit. The transaction pays for its dominant resource, storage: 528 bytes times 366 is 193,248 gas, not 140,300. Click to replay."></canvas>
+                <div class="piece-text">
+                    <div class="line"><h3 class="name">Adding storage to a virtual machine's resource accounting</h3><span class="meta">Moonsong Labs · <a href="https://github.com/polkadot-evm/frontier/pull/1142">Frontier</a>, <a href="https://github.com/rust-ethereum/evm/pull/173">Rust EVM</a>, <a href="https://github.com/moonbeam-foundation/moonbeam/pull/2452">Moonbeam</a> · 2023</span></div>
+                    <p>A virtual machine bills each program for the resources it uses. Moonbeam's EVM metered computation and proof data, but not storage, which every node keeps forever. Following Moonbeam's MBIP-5 rule, I added storage as a resource in the Rust EVM interpreter, Frontier and Moonbeam. Every node must reach the same count, so each SSTORE and CREATE is checked as it runs, against a limit set by what the transaction paid. Only new slots and code add bytes, a slot written twice counts once, and the interpreter now reports a new contract's code size. Each transaction pays for its dominant resource, so no block adds more than 160 KB. It runs on every Moonbeam node.</p>
+                </div>
+            </article>
+
+            <article class="piece wide" id="work-battery">
+                <canvas id="battery" role="img" aria-label="How a meter on a 20-year battery still passes its readings along. Rows show the route from a meter through two battery-powered relays to a mains-powered collector that always listens, over 12 seconds. Battery radios sleep and wake briefly to listen on a schedule; a reading waits until the next hop listens, goes out on that window's radio channel, and if the frame is lost it is retried at the following window. Below, three wake intervals compared, assuming nothing is lost: waking every 0.25 seconds means listening 4% of the time with an average delay of 0.25 seconds; every second, 1% and 1 second; every 4 seconds, 0.25% and 4 seconds. Click an interval, or use the up and down arrow keys, to show it."></canvas>
+                <div class="piece-text">
+                    <div class="line"><h3 class="name">Make it last 20 years</h3><span class="meta">Itron · 2018–2020</span></div>
+                    <p>Battery-powered meters, like water and gas meters, have to run for 20 years on one battery, so their radio sleeps almost all the time and wakes only for short, scheduled listening windows. At Itron I developed, in C++, the firmware's RPL routing and parent selection, frequency hopping, retransmissions, and the scheduled wake-ups and receive windows that keep idle listening low.</p>
+                </div>
+            </article>
+
+            <article class="piece wide" id="work-qam">
+                <canvas id="speeds" role="img" aria-label="Which speed should the meter send at? A meter sends to a neighbor on a 25 kbps lane, its preferred speed; at 25 kbps the same reading spends 24 times as long on air as at 600 kbps. The estimated signal margin at 600 kbps starts below what that speed needs, so there are no tests. As the signal improves, the meter tests 600 kbps on 1% of packets per dB of margin: an early test is lost, a later one gets through, the meter keeps using 600 kbps while its packets arrive, and it becomes the preferred speed. A chart of the speed in use over time shows the usual rule staying at 25 kbps, while the patent's rule moves up to 600 kbps."></canvas>
+                <div class="piece-text">
+                    <div class="line"><h3 class="name">Trying faster speeds now and then</h3><span class="meta">Itron · <a href="https://patents.google.com/patent/US10833910B1/en">US patent 10,833,910</a> · 2020</span></div>
+                    <p>A meter's radio sends at the speed that has worked best so far. Once one speed is preferred, the faster ones stop being tried, so the radio may never learn that one would now work. Six co-inventors and I patented the fix: send an occasional real packet at a faster speed, more often when the signal seems to have room to spare, and keep using that speed while its packets get through. At a faster speed, each reading spends less time on air.</p>
+                </div>
+            </article>
+
+            <article class="piece wide" id="work-diffusion">
+                <canvas id="diffusion" role="img" aria-label="Who should get the restaurant offer first? The same crowd of phones twice, each phone shaded by how interested its owner is in the offer. On the left, the usual rule picks the three best-connected phones, which sit in a busy crowd that mostly does not care: the offer reaches 5 of 17 interested people. On the right, the paper's rule picks the phones whose neighbors care most: the offer reaches 11 of 17. Below, the paper's simulation results for the share of users' interest reached: in a dense crowd, 57% for the best-connected phones and 66% for the paper's rule; on city streets, 41% and 52%. Click to replay."></canvas>
+                <div class="piece-text">
+                    <div class="line"><h3 class="name">Picking who spreads an offer</h3><span class="meta">IRIT, Toulouse · <a href="https://ieeexplore.ieee.org/document/7925787">IEEE WCNC 2017</a></span></div>
+                    <p>A server can spread an offer cheaply by sending it to a few seed phones, which pass it to phones nearby over Wi-Fi. Picking the best-connected phones, the usual choice, reaches many people who don't care. In my master's research I modelled who cares about each topic on top of who is in radio range, and compared seed picks in simulation: phones whose neighbors care most reached 9 to 11 percentage points more of users' interest. It became a paper with my supervisors.</p>
+                </div>
+            </article>
             </div>
-            <div class="intro-copy">
-                <p>I'm interested in systems programming, performance optimization, and distributed systems, as well as artificial intelligence and machine learning.</p>
-                <p>My work spans distributed storage, asynchronous services, and embedded networking. I care about making software reliable, efficient, and easier to maintain.</p>
-                <p>Find me on <a href="https://github.com/ahmadkaouk">GitHub <span class="external" aria-hidden="true">↗</span></a> and <a href="https://www.linkedin.com/in/ahmad-kaouk-6a1a38119/">LinkedIn <span class="external" aria-hidden="true">↗</span></a>.</p>
+            <div class="scroller-nav" aria-label="Scroll work">
+                <button type="button" data-dir="-1" aria-label="Previous">←</button>
+                <button type="button" data-dir="1" aria-label="Next">→</button>
             </div>
-        </header>
-        <section class="link-section" aria-labelledby="projects-title">
-            <h2 id="projects-title">Open source</h2>
-            <ul class="project-list">
-                <li><a href="https://github.com/datahaven-xyz/datahaven">DataHaven <span class="external" aria-hidden="true">↗</span></a><span>Verifiable storage</span></li>
-                <li><a href="https://github.com/moonbeam-foundation/moonbeam">Moonbeam <span class="external" aria-hidden="true">↗</span></a><span>EVM-compatible parachain</span></li>
-                <li><a href="https://github.com/polkadot-evm/frontier">Frontier <span class="external" aria-hidden="true">↗</span></a><span>Ethereum for Substrate</span></li>
-                <li><a href="https://github.com/rust-ethereum/evm">rust-ethereum/evm <span class="external" aria-hidden="true">↗</span></a><span>Ethereum VM in Rust</span></li>
-            </ul>
         </section>
     </main>
 </body>

@@ -1,0 +1,212 @@
+@font-face {
+    font-family: "Golos Text";
+    font-style: normal;
+    font-weight: 400 900;
+    font-display: swap;
+    src: url("/assets/fonts/golos-text-variable.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "Newsreader";
+    font-style: normal;
+    font-weight: 400 600;
+    font-display: swap;
+    src: url("/assets/fonts/newsreader-variable.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "Newsreader";
+    font-style: italic;
+    font-weight: 400 600;
+    font-display: swap;
+    src: url("/assets/fonts/newsreader-italic-variable.woff2") format("woff2");
+}
+
+:root {
+    --sans: "Golos Text", ui-sans-serif, system-ui, sans-serif;
+    --serif: "Newsreader", ui-serif, Georgia, serif;
+    --bg: #fdfcfa;
+    --ink: #1f1c18;
+    --text: #2b2723;
+    --body: #57534e;
+    --dim: #57534e;
+    --line: #d6d1c8;
+    --mid: #a39d93;
+    --leader: #e7e3db;
+    --card: #f4f2ed;
+    --accent: #1f3ff5;
+    --small: 13px;
+    color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+h1, h2, h3, p, ul, figure { margin: 0; padding: 0; font-size: inherit; font-weight: inherit; }
+ul { list-style: none; }
+
+html { background: var(--bg); scroll-behavior: smooth; }
+section[id], article[id] { scroll-margin-top: 64px; }
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 400 14px/1.6 var(--sans);
+}
+
+a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--line);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    transition: color 150ms, text-decoration-color 150ms;
+}
+a:hover { color: var(--ink); text-decoration-color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+::selection { background: #d6ddff; color: var(--ink); }
+
+/* Top bar: section links, aligned right */
+.top {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: color-mix(in srgb, var(--bg) 90%, transparent);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+.top-inner {
+    display: flex;
+    justify-content: flex-end;
+    width: min(480px, 100% - 40px);
+    margin-inline: auto;
+    padding: 22px 0 14px;
+}
+.nav { display: flex; gap: 22px; }
+.nav a { color: var(--dim); text-decoration: none; }
+.nav a:hover { color: var(--ink); }
+.nav a[aria-current] {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 6px;
+}
+
+/* One centered column of content */
+.page {
+    width: min(480px, 100% - 40px);
+    margin-inline: auto;
+    padding-top: 40px;
+    padding-bottom: 96px;
+    --bleed: max(20px, (100vw - 480px) / 2);
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+/* Contact links in the intro: a firmer underline in the accent */
+.lead a { text-decoration-color: var(--accent); text-decoration-thickness: 2px; }
+.lead a:hover { color: var(--accent); }
+
+/* Text: reading paragraphs are set in the serif, everything else stays in the sans */
+.lead p, .piece-text p, .now p:not(.facts) {
+    font-family: var(--serif);
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--ink);
+}
+.lead p + p { margin-top: 14px; }
+.lead p, .piece-text p, .now p, .jobs p:not(.facts) { text-wrap: pretty; }
+.ink { color: var(--ink); }
+
+/* Lists */
+h2 { margin: 72px 0 14px; color: var(--ink); font-size: inherit; font-weight: 500; line-height: 1.4; text-wrap: balance; }
+.entries { line-height: 1.45; }
+.entries li + li { margin-top: 14px; }
+.writings .sub { display: block; margin-top: 2px; font-size: var(--small); color: var(--dim); }
+.now p { max-width: 60ch; }
+.now .facts { margin-top: 6px; font-size: var(--small); color: var(--dim); }
+.line { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+.name { color: var(--ink); }
+.meta { color: var(--dim); font-size: var(--small); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.meta a { text-decoration-color: var(--line); }
+
+/* Work: the pieces sit in one row that scrolls sideways and runs out to the right edge of the window */
+.pieces {
+    display: flex;
+    gap: 16px;
+    margin-right: calc(-1 * var(--bleed));
+    padding-right: var(--bleed);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+}
+.pieces::-webkit-scrollbar { display: none; }
+.pieces:focus-visible { outline-offset: 4px; }
+.piece { flex: 0 0 min(400px, 86%); scroll-snap-align: start; }
+/* A piece that needs more room for its figure. Sized from the viewport, since the row runs past the column:
+   at most 640px, and always leaving about 56px of the next piece in view */
+.piece.wide { flex-basis: min(640px, 100vw - 76px, 50vw + 184px); }
+.scroller-nav { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
+.scroller-nav button {
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--ink);
+    font: inherit;
+    cursor: pointer;
+    transition: border-color 150ms, opacity 150ms;
+}
+.scroller-nav button:hover { border-color: var(--ink); }
+.scroller-nav button:disabled { opacity: 0.35; cursor: default; border-color: var(--line); }
+.piece { display: flex; flex-direction: column; background: var(--card); overflow: hidden; }
+.piece canvas { display: block; width: 100%; aspect-ratio: 4 / 3; min-height: 260px; cursor: pointer; touch-action: manipulation; }
+.piece canvas[data-drag] { touch-action: pan-y; }
+.piece.wide canvas { aspect-ratio: 16 / 10; min-height: 360px; }
+.piece canvas:focus-visible { outline-offset: -3px; }
+.piece-text { padding: 2px 20px 20px; line-height: 1.45; }
+.piece h3 { color: var(--ink); font-weight: 500; }
+.piece .meta { white-space: normal; }
+.piece p { margin-top: 8px; }
+.piece .line { flex-direction: column; gap: 0; }
+
+/* Work page: three plain sections. Each job is a line (company and role, years on the right), a short
+   paragraph and its tools; open source and papers are one line each, cut short with an ellipsis if needed */
+.page-title { color: var(--ink); font-weight: 500; line-height: 1.4; }
+.page-title + section h2 { margin-top: 32px; }
+.page-title + .entries, .page-title + .now { margin-top: 24px; }
+.jobs > li + li { margin-top: 28px; }
+.jobs p { margin-top: 4px; color: var(--ink); line-height: 1.6; text-wrap: pretty; }
+.jobs .facts { margin-top: 4px; font-size: var(--small); color: var(--dim); }
+.rows li + li { margin-top: 10px; }
+.rows .name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dim { color: var(--dim); }
+
+
+@media (max-width: 480px) {
+    .top-inner { padding: 16px 0 12px; }
+    .nav { gap: 18px; }
+    .page { padding-top: 32px; }
+    .meta { white-space: normal; text-align: right; }
+    .entries .line { flex-wrap: wrap; row-gap: 0; }
+    .entries .meta { flex-basis: 100%; text-align: left; }
+    .rows .name { white-space: normal; }
+    .rows .line, .jobs .line { flex-wrap: wrap; row-gap: 0; }
+    .rows .meta, .jobs .meta { flex-basis: 100%; text-align: left; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    a { transition: none; }
+}
+
+/* Experiment: Golos only. Delete this block to bring Newsreader back */
+:root { --serif: var(--sans); }
+.lead p, .piece-text p, .now p:not(.facts) { font-size: 14px; }
