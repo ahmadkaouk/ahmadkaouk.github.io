@@ -11,14 +11,15 @@
     --bg: #fdfcfa;
     --ink: #1f1c18;
     --text: #2b2723;
-    --body: #57534e;
+    --body: #46423c;
     --dim: #57534e;
+    --meta: #6b665f;
     --line: #d6d1c8;
     --mid: #a39d93;
     --leader: #e7e3db;
     --card: #f4f2ed;
     --accent: #1f3ff5;
-    --small: 13px;
+    --small: 12.5px;
     color-scheme: light;
 }
 
@@ -34,7 +35,7 @@ body {
     margin: 0;
     background: var(--bg);
     color: var(--text);
-    font: 400 14px/1.6 var(--sans);
+    font: 400 13.5px/1.6 var(--sans);
 }
 
 a {
@@ -66,7 +67,7 @@ a:hover { color: var(--ink); text-decoration-color: var(--accent); }
     padding: 22px 0 14px;
 }
 .nav { display: flex; gap: 22px; }
-.nav a { color: var(--dim); text-decoration: none; }
+.nav a { color: var(--meta); text-decoration: none; }
 .nav a:hover { color: var(--ink); }
 .nav a[aria-current] {
     color: var(--ink);
@@ -98,26 +99,28 @@ a:hover { color: var(--ink); text-decoration-color: var(--accent); }
 .lead a { text-decoration-color: var(--accent); text-decoration-thickness: 2px; }
 .lead a:hover { color: var(--accent); }
 
-/* Text: reading paragraphs in the ink color, at the body size */
+/* Text: reading paragraphs in the body grey, so titles, names and links in the ink color stand out */
 .lead p, .piece-text p, .now p:not(.facts) {
-    font-size: 14px;
+    font-size: 13.5px;
     line-height: 1.6;
-    color: var(--ink);
+    color: var(--body);
 }
+.lead p a, .piece-text p a, .jobs p a { color: var(--ink); }
 .lead p + p { margin-top: 14px; }
+.intro + section h2 { margin-top: 40px; }
 .lead p, .piece-text p, .now p, .jobs p:not(.facts) { text-wrap: pretty; }
 .ink { color: var(--ink); }
 
 /* Lists */
-h2 { margin: 72px 0 14px; color: var(--ink); font-size: inherit; font-weight: 500; line-height: 1.4; text-wrap: balance; }
+h2 { margin: 72px 0 14px; color: var(--ink); font-size: 15.5px; font-weight: 600; letter-spacing: -0.005em; line-height: 1.4; text-wrap: balance; }
 .entries { line-height: 1.45; }
 .entries li + li { margin-top: 14px; }
-.writings .sub { display: block; margin-top: 2px; font-size: var(--small); color: var(--dim); }
+.writings .sub { display: block; margin-top: 2px; font-size: var(--small); color: var(--meta); }
 .now p { max-width: 60ch; }
-.now .facts { margin-top: 6px; font-size: var(--small); color: var(--dim); }
+.now .facts { margin-top: 6px; font-size: var(--small); color: var(--meta); }
 .line { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
 .name { color: var(--ink); }
-.meta { color: var(--dim); font-size: var(--small); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.meta { color: var(--meta); font-size: var(--small); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .meta a { text-decoration-color: var(--line); }
 
 /* Work: the pieces sit in one row that scrolls sideways and runs out to the right edge of the window */
@@ -134,9 +137,9 @@ h2 { margin: 72px 0 14px; color: var(--ink); font-size: inherit; font-weight: 50
 .pieces::-webkit-scrollbar { display: none; }
 .pieces:focus-visible { outline-offset: 4px; }
 .piece { flex: 0 0 min(400px, 86%); scroll-snap-align: start; }
-/* A piece that needs more room for its figure. Sized from the viewport, since the row runs past the column:
-   at most 640px, and always leaving about 56px of the next piece in view */
-.piece.wide { flex-basis: min(640px, 100vw - 76px, 50vw + 184px); }
+/* A piece that needs more room for its figure: as wide as the text column, and taller than it is wide. Sized from
+   the viewport, since the row runs past the column, so a phone always shows about 40px of the next piece */
+.piece.wide { flex-basis: min(480px, 100vw - 76px); }
 .scroller-nav { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
 .scroller-nav button {
     width: 30px;
@@ -153,25 +156,28 @@ h2 { margin: 72px 0 14px; color: var(--ink); font-size: inherit; font-weight: 50
 .piece { display: flex; flex-direction: column; background: var(--card); overflow: hidden; }
 .piece canvas { display: block; width: 100%; aspect-ratio: 4 / 3; min-height: 260px; cursor: pointer; touch-action: manipulation; }
 .piece canvas[data-drag] { touch-action: pan-y; }
-.piece.wide canvas { aspect-ratio: 16 / 10; min-height: 360px; }
+.piece.wide canvas { aspect-ratio: 1 / 1; min-height: 360px; }
 .piece canvas:focus-visible { outline-offset: -3px; }
-.piece-text { padding: 2px 20px 20px; line-height: 1.45; }
-.piece h3 { color: var(--ink); font-weight: 500; }
-.piece .meta { white-space: normal; }
-.piece p { margin-top: 8px; }
+/* The text lines up with the figure's own 24px margin: a larger title, then a smaller description */
+.piece-text { padding: 0 24px 24px; line-height: 1.45; }
+.piece h3 { color: var(--ink); font-size: 15px; font-weight: 600; letter-spacing: -0.005em; line-height: 1.35; }
+.piece .meta { margin-top: 3px; font-size: 12px; white-space: normal; }
+.piece-text p { margin-top: 10px; font-size: 12.5px; line-height: 1.6; }
 .piece .line { flex-direction: column; gap: 0; }
 
 /* Work page: three plain sections. Each job is a line (company and role, years on the right), a short
    paragraph and its tools; open source and papers are one line each, cut short with an ellipsis if needed */
-.page-title { color: var(--ink); font-weight: 500; line-height: 1.4; }
+.page-title { color: var(--ink); font-size: 19.5px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.3; }
 .page-title + section h2 { margin-top: 32px; }
 .page-title + .entries, .page-title + .now { margin-top: 24px; }
 .jobs > li + li { margin-top: 28px; }
-.jobs p { margin-top: 4px; color: var(--ink); line-height: 1.6; text-wrap: pretty; }
-.jobs .facts { margin-top: 4px; font-size: var(--small); color: var(--dim); }
+.jobs p { margin-top: 4px; color: var(--body); line-height: 1.6; text-wrap: pretty; }
+.jobs .name { font-weight: 600; }
+.jobs .name .dim { font-weight: 400; }
+.jobs .facts { margin-top: 4px; font-size: var(--small); color: var(--meta); }
 .rows li + li { margin-top: 10px; }
 .rows .name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.dim { color: var(--dim); }
+.dim { color: var(--meta); }
 
 
 @media (max-width: 480px) {
