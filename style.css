@@ -8,7 +8,7 @@
 
 :root {
     --sans: "Golos Text", ui-sans-serif, system-ui, sans-serif;
-    --bg: #fdfcfa;
+    --bg: #ffffff;
     --ink: #1f1c18;
     --text: #2b2723;
     --body: #46423c;
@@ -117,7 +117,12 @@ h2 { margin: 72px 0 14px; color: var(--ink); font-size: 15.5px; font-weight: 600
 .entries li + li { margin-top: 14px; }
 .writings .sub { display: block; margin-top: 2px; font-size: var(--small); color: var(--meta); }
 .now p { max-width: 60ch; }
+.now ul { max-width: 60ch; padding-left: 18px; list-style: disc; }
+.now li { font-size: 13.5px; line-height: 1.6; color: var(--body); text-wrap: pretty; }
+.now li::marker { color: var(--meta); }
+.now li + li { margin-top: 6px; }
 .now .facts { margin-top: 6px; font-size: var(--small); color: var(--meta); }
+.now ul + .facts { margin-top: 16px; }
 .line { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
 .name { color: var(--ink); }
 .meta { color: var(--meta); font-size: var(--small); white-space: nowrap; font-variant-numeric: tabular-nums; }
